@@ -18,6 +18,60 @@
        
        
     }
+
+    .button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction:row;
+}
+
+.left-buttons{
+    display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+
+}
+.right-buttons{
+    display: flex;
+  flex-direction: column;
+  margin-left: 30px;
+
+}
+
+.row-buttons{
+  display: flex;
+  flex-direction: row;
+}
+
+.column-buttons{
+    
+  display: flex;
+  flex-direction: column;
+}
+
+
+.row-buttons .arr, .column-buttons .arr {
+  margin: 10px;
+}
+.spacer {
+  width: 200px; /* Adjust the width to control the gap between the containers */
+  height: 10px; /* You can set the height to 1px to make it invisible */
+  background-color: transparent; /* Make the spacer invisible */
+}
+
+@media (max-width: 768px) {
+  .button-container {
+    flex-direction: column;
+  }
+
+  .left-buttons, .right-buttons {
+    margin: 10px;
+  }
+}
+
+
+
     
 </style>
 
@@ -113,8 +167,8 @@
       <div class="left arr"><i class="fa fa-arrow-left"></i></div>
       <div class="down arr"><i class="fa fa-arrow-down"></i></div>
       <div class="right arr"><i class="fa fa-arrow-right"></i></div>
+      <h2>Turtlebot Control</h2>
     
-
 </div>
 
 
@@ -135,8 +189,58 @@
 
 
         </div>
+        </div>  
     </div>
 
+<div class="col-12" class="grid-item">
+    <div class="card" id="actuateDev">
+        <div class="card-header">
+            <h2 class="dimension">Arm Control</h2>
+        </div>
+
+              
+
+
+        <div class="keys">
+
+
+
+            <div class="button-container">
+                <div class="left-buttons">
+                    <div class="column-buttons">
+                        
+                        <div class="row-buttons">
+                            <div id="bottom-pivot-up" class="arr"><i class="fas fa-arrow-up"></i></div>
+                            <div id="bottom-pivot-down" class="arr"><i class="fas fa-arrow-down"></i></div>
+                        </div>
+                        <h2>Bottom Pivot</h2>
+                        <div class="row-buttons">
+                            <div id="middle-pivot-up" class="arr"><i class="fas fa-arrow-up"></i></div>
+                            <div id="middle-pivot-down" class="arr"><i class="fas fa-arrow-down"></i></div>
+                        </div>
+                        <h2>Middle Pivot</h2>
+                        <div class="row-buttons">
+                            <div id="upper-pivot-up" class="arr"><i class="fas fa-arrow-up"></i></div>
+                            <div id="upper-pivot-down" class="arr"><i class="fas fa-arrow-down"></i></div>
+                        </div>
+                        <h2>Upper Pivot</h2>
+                    </div>>    
+                   
+                </div>
+                <div class="right-buttons">
+                    <div class="row-buttons">
+                        <div id="bottom-deck-left" class="arr"><i class="fas fa-arrow-left"></i></div>
+                        <div id="bottom-deck-right" class="arr"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                    <h2>Bottom Deck Control</h2>
+                    <div class="row-buttons">
+                        <div id="fork-catch" class="arr"><i class="fas fa-arrow-left"></i></div>
+                        <div id="fork-release" class="arr"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                    <h2>Fork Control</h2>
+                    </div>
+                </div>      
+            </div>
 
 </div>
 </div>

@@ -2,6 +2,11 @@ import rospy
 from geometry_msgs.msg import Twist
 import sys, select, os
 from std_msgs.msg import String
+from nav_msgs.msg import Odometry
+from sensor_msgs.msg import BatteryState
+
+
+
 
 
 BURGER_MAX_LIN_VEL = 5.0
@@ -143,6 +148,68 @@ def key_callback(msg):
     move(msg)
 
 
+# #just added this function
+# def odom_callback(odom_data):
+#     # Extract linear and angular velocities from the odom topic
+#     linear_velocity = odom_data.twist.twist.linear
+#     angular_velocity = odom_data.twist.twist.angular
+    
+#     # Create a Twist message and populate it
+#     twist = Twist()
+#     twist.linear.x = checkLinearLimitVelocity(linear_velocity.x)
+#     twist.linear.y = checkLinearLimitVelocity(linear_velocity.y)
+#     twist.linear.z = checkLinearLimitVelocity(linear_velocity.z)
+#     twist.angular.x = checkAngularLimitVelocity(angular_velocity.x)
+#     twist.angular.y = checkAngularLimitVelocity(angular_velocity.y)
+#     twist.angular.z = checkAngularLimitVelocity(angular_velocity.z)
+
+#     # Publish the Twist message
+#     pub.publish(twist)
+
+
+def odom_callback(odom_data):
+    # Extract linear and angular velocities from the odom topic
+    linear_velocity = odom_data.twist.twist.linear
+    angular_velocity = odom_data.twist.twist.angular
+    
+    # Convert the Odometry data to a dictionary
+    odom_dict = {
+        'position': {
+            'x': odom_data.pose.pose.position.x,
+            'y': odom_data.pose.pose.position.y,
+            'z': odom_data.pose.pose.position.z
+        },
+        'orientation': {
+            'x': odom_data.pose.pose.orientation.x,
+            'y': odom_data.pose.pose.orientation.y,
+            'z': odom_data.pose.pose.orientation.z,
+            'w': odom_data.pose.pose.orientation.w
+        },
+        'linear_velocity': {
+            'x': linear_velocity.x,
+            'y': linear_velocity.y,
+            'z': linear_velocity.z
+        },
+        'angular_velocity': {
+            'x': angular_velocity.x,
+            'y': angular_velocity.y,
+            'z': angular_velocity.z
+        }
+    }
+
+    # Send the odometry data to the Socket.io server
+    #sio.emit('odom_data', odom_dict)
+    twist = Twist()
+    twist.linear.x = checkLinearLimitVelocity(linear_velocity.x)
+    twist.linear.y = checkLinearLimitVelocity(linear_velocity.y)
+    twist.linear.z = checkLinearLimitVelocity(linear_velocity.z)
+    twist.angular.x = checkAngularLimitVelocity(angular_velocity.x)
+    twist.angular.y = checkAngularLimitVelocity(angular_velocity.y)
+    twist.angular.z = checkAngularLimitVelocity(angular_velocity.z)
+
+    pub.publish(twist)
+
+
 
 turtlebot3_model = rospy.get_param("model", "waffle_pi")
 
@@ -151,8 +218,8 @@ rospy.init_node('aa')
 
 pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
 sub = rospy.Subscriber('/control',String,key_callback)
-
-itr = rospy.Subscriber('/metric',String, c_move)
+odom_sub = rospy.Subscriber('/odom', Odometry, odom_callback) # we are uncommenting this so that it mirrors the physical 
+#itr = rospy.Subscriber('/metric',String, c_move)
 
 
 

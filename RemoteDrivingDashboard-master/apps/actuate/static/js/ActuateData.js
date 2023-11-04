@@ -25,6 +25,113 @@
   draw1.font = "20px Arial";
   draw1.lineWidth = 3;
 
+  // arm control elements 
+  var bottom_deck_left = document.getElementById("bottom-deck-left");
+  var bottom_deck_right = document.getElementById("bottom-deck-right");
+
+  var fork_catch = document.getElementById("fork-catch");
+  var fork_release = document.getElementById("fork-release");
+
+  var bottom_pivot_up =  document.getElementById("bottom-pivot-up");
+  var bottom_pivot_down =  document.getElementById("bottom-pivot-down");
+
+  var middle_pivot_up =  document.getElementById("middle-pivot-up");
+  var middle_pivot_down =  document.getElementById("middle-pivot-down");
+
+  var upper_pivot_up =  document.getElementById("upper-pivot-up");
+  var upper_pivot_down =  document.getElementById("upper-pivot-down");
+
+
+  
+
+// Pivots Control 
+    // lower
+    bottom_pivot_up.addEventListener('click', function(e) {
+        // Handle the click event
+        e.preventDefault();
+        console.log('bottom_pivot_up clicked!');
+        socket.emit('bottom_pivot', 'u');
+
+    });
+    bottom_pivot_down.addEventListener('click', function(e) {
+        // Handle the click event
+        e.preventDefault();
+        console.log('bottom_pivot_down clicked!');
+        socket.emit('bottom_pivot', 'd');
+
+    });
+
+    // middle
+    middle_pivot_up.addEventListener('click', function(e) {
+        // Handle the click event
+        e.preventDefault();
+        console.log('middle_pivot_up clicked!');
+        socket.emit('middle_pivot', 'u');
+
+    });
+    middle_pivot_down.addEventListener('click', function(e) {
+        // Handle the click event
+        e.preventDefault();
+        console.log('middle_pivot_down clicked!');
+        socket.emit('middle_pivot', 'd');
+
+    });
+
+    // upper
+    upper_pivot_up.addEventListener('click', function(e) {
+        // Handle the click event
+        e.preventDefault();
+        console.log('upper_pivot_up clicked!');
+        socket.emit('upper_pivot', 'u');
+
+    });
+    upper_pivot_down.addEventListener('click', function(e) {
+        // Handle the click event
+        e.preventDefault();
+        console.log('upper_pivot_downleft clicked!');
+        socket.emit('upper_pivot', 'd');
+
+    });
+
+
+
+
+// Deck Control 
+bottom_deck_left.addEventListener('click', function(e) {
+    // Handle the click event
+    e.preventDefault();
+    console.log('bottom-deck-left clicked!');
+    socket.emit('bottom_deck', 'l');
+
+});
+bottom_deck_right.addEventListener('click', function(e) {
+    // Handle the click event
+    e.preventDefault();
+    console.log('bottom-deck-right clicked!');
+    console.log('bottom-deck-left clicked!');
+    socket.emit('bottom_deck', 'r');
+ 
+});
+
+
+// Fork Control 
+fork_catch.addEventListener('click', function(e) {
+    // Handle the click event
+    e.preventDefault();
+    console.log('fork_catch clicked!');
+    socket.emit('fork_control', 'c');
+ 
+});
+fork_release.addEventListener('click', function(e) {
+    // Handle the click event
+    e.preventDefault();
+    console.log('fork_release clicked!');
+    socket.emit('fork_control', 'r');
+    
+});
+
+
+
   //actuation controls and sliders
 
 
@@ -328,7 +435,14 @@ $(document).keydown(function(e) {
     $('.righttext').text('RIGHT');
     $('.right').css('transform', 'translate(0, 2px)');
      socket.emit('new_data','d');
-  } else if (e.which==40||e.which==83) {
+  } 
+  else if (e.which==41||e.which==83) {
+    $('.down').addClass('pressed');
+    $('.downtext').text('STOP');
+    $('.stop').css('transform', 'translate(0, 2px)');
+    socket.emit('new_data', 's');
+  }
+  else if (e.which==40||e.which==88) {
     $('.down').addClass('pressed');
     $('.downtext').text('DOWN');
     $('.down').css('transform', 'translate(0, 2px)');

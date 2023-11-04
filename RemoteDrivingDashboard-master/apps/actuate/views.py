@@ -33,8 +33,36 @@ def disconnect_web(sid):
 
 @sio.on('new_data', namespace='/web')
 def newData(sid,data):
-    
     sio.emit('actuateData',data,namespace='/movement')
+
+# arm control 
+
+    ## Pivot Control 
+
+@sio.on('bottom_pivot', namespace='/web')
+def bottomPivotData(sid,data):
+    sio.emit('bottomPivot',data,namespace='/arm')
+
+@sio.on('middle_pivot', namespace='/web')
+def middlePivotData(sid,data):
+    sio.emit('middlePivot',data,namespace='/arm')
+
+@sio.on('upper_pivot', namespace='/web')
+def upperPivotData(sid,data):
+    sio.emit('upperPivot',data,namespace='/arm')
+    ## Deck Control 
+
+@sio.on('bottom_deck', namespace='/web')
+def bottomDeckData(sid,data):
+    sio.emit('bottomDeck',data,namespace='/arm')
+
+
+    ## Fork Control 
+
+@sio.on('fork_control', namespace='/web')
+def forkData(sid,data):
+    sio.emit('forkControl',data,namespace='/arm')
+
 
 #cv
 @sio.on('connect', namespace='/cv')
@@ -71,6 +99,9 @@ def disconnect_dashboard(sid):
 def handle_sensed_data(sid,message):
     sio.emit('sensedData', message, namespace='/web')
 
+@sio.on('gazebo_event',namespace='/gazebo')
+def handle_sensed_data(sid,message):
+    sio.emit('gazeboData', message, namespace='/manga')
 
 @sio.on('connect', namespace='/dynamicDB')
 def connect_QT(sid,data):
