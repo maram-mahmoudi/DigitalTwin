@@ -225,5 +225,4 @@ odom_sub = rospy.Subscriber('/odom', Odometry, odom_callback) # we are uncomment
 print("before control")
 sub = rospy.Subscriber('/control',String,key_callback)
 #itr = rospy.Subscriber('/metric',String, c_move)
-
 rospy.spin()

@@ -103,6 +103,12 @@ def handle_sensed_data(sid,message):
 def handle_sensed_data(sid,message):
     sio.emit('gazeboData', message, namespace='/manga')
 
+#this is to send to the socketio the jointstates message for the arm 
+@sio.on('arm_event',namespace='/arm_namespace')
+def handle_sensed_data(sid,message):
+    sio.emit('armData', message, namespace='/arm_control')
+
+
 @sio.on('connect', namespace='/dynamicDB')
 def connect_QT(sid,data):
     print("Hi from".format(sid))

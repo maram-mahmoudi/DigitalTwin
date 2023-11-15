@@ -29,7 +29,7 @@ def set_model_state(msg):
     try:
         set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
 
-        state_msg = ModelState()
+        state_msg = SetJointProperties()
         state_msg.model_name = 'turtlebot3'
         print('X: ')
         print(msg['position']['x'])
