@@ -8,20 +8,30 @@ import socketio
 
 
 sio = socketio.Client()
+counter = 0
 
 def joint_callback(data):
-    print("entered callback")
-    joint_state_positions= {
-        'name' : data.name,
-        'position_joint1' : data.position[2],
-        'position_joint2' : data.position[3],
-        'position_joint3' : data.position[4],
-        'position_joint4' : data.position[5],
-        'position_gripper': data.position[0],
 
-    }
-    sio.emit('arm_event',joint_state_positions, namespace='/arm_namespace')
-    print ("data sent to socket io")
+    global counter
+    try:
+        joint_state_positions= {
+            'name' : data.name,
+            'position_joint1' : data.position[2],
+            'position_joint2' : data.position[3],
+            'position_joint3' : data.position[4],
+            'position_joint4' : data.position[5],
+            'position_gripper': data.position[0],
+
+        }
+        # Avoiding high throughput
+        counter += 1
+        if (counter%50) == 0:
+            sio.emit('arm_event',joint_state_positions, namespace='/arm_namespace')
+            print ("data sent to socket io")
+    except:
+        print(f'''Ignoring Wheel State''')
+   
+    
 
     # joinState=JointState()
     # joinState=data
