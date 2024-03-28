@@ -5,6 +5,9 @@ import sys, select, os
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry
 import socketio
+###
+from std_msgs.msg import Bool
+
 #from AUC-Thesis-DT-Physical/RemoteDrivingDashboard-master/apps/home/views.py import sio
 
 
@@ -19,6 +22,9 @@ WAFFLE_MAX_ANG_VEL = 1.82
 
 LIN_VEL_STEP_SIZE = 0.01
 ANG_VEL_STEP_SIZE = 0.1
+
+####
+interrupted = None
 
 def makeSimpleProfile(output, input, slop):
     if input > output:
@@ -170,6 +176,9 @@ def key_callback(msg):
 
 
 def odom_callback(odom_data):
+
+    ###
+    global interrupted
     
     # Extract linear and angular velocities from the odom topic
     linear_velocity = odom_data.twist.twist.linear
@@ -209,10 +218,23 @@ def odom_callback(odom_data):
     twist.angular.x = checkAngularLimitVelocity(angular_velocity.x)
     twist.angular.y = checkAngularLimitVelocity(angular_velocity.y)
     twist.angular.z = checkAngularLimitVelocity(angular_velocity.z)
-    pub.publish(twist)
+    if interrupted == False:
+        pub.publish(twist)
+    else: 
+        set_velocities(0, 0)
+####
 
+def interrupt_callback(data): 
+    global interrupted
+    interrupted = data.data
 
+def set_velocities(linear, angular):
+        twist = Twist()
+        twist.linear.x = linear
+        twist.angular.z = angular
+        pub.publish(twist)
 
+####
 turtlebot3_model = rospy.get_param("model", "waffle_pi")
 
 
@@ -225,4 +247,6 @@ odom_sub = rospy.Subscriber('/odom', Odometry, odom_callback) # we are uncomment
 print("before control")
 sub = rospy.Subscriber('/control',String,key_callback)
 #itr = rospy.Subscriber('/metric',String, c_move)
+####
+subscriber = rospy.Subscriber("/interrupt_state", Bool, interrupt_callback)
 rospy.spin()

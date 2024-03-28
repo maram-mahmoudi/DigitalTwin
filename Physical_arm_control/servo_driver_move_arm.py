@@ -32,7 +32,10 @@ def set_servo_angle(angle, channel):
     angle_degrees = math.degrees(angle)
     print(f'''Pwm: {channel} Angle: {angle_degrees}''')
 
-   # angle_degrees = (angle_degrees * 133) / 180
+    if angle_degrees < -90:
+        angle_degrees = -90
+    if angle_degrees > 90:
+        angle_degrees = 90
     if channel == 4: 
         angle_cal =angle_degrees * 180 / 1.08
         angle_degrees = max(0, min(180, angle_cal ))

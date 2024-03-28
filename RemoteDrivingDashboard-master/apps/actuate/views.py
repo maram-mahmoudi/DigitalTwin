@@ -115,6 +115,18 @@ def connect_QT(sid,data):
     print('[INFO] Create_DynamicDB connected: {}'.format(sid))
 
 
+####### socket io for the ultrasonic 
+@sio.on('ultrasonic_event',namespace='/ultrasonic_namespace')
+def handle_sensed_data(sid,message):
+    sio.emit('ultrasonicData', message, namespace='/ultrasonic')
+
+
+####### socket io for the ultrasonic states 
+@sio.on('ultrasonic_state_event',namespace='/ultrasonic_state_namespace')
+def handle_sensed_data(sid,message):
+    sio.emit('interrupt_callback', message, namespace='/interruption_state')
+
+
 
 
 def main(request):
