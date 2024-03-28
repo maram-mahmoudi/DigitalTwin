@@ -1,3 +1,4 @@
+
 import rospy
 import sys
 from geometry_msgs.msg import Twist
@@ -7,6 +8,7 @@ from nav_msgs.msg import Odometry
 import socketio
 ###
 from std_msgs.msg import Bool
+from datetime import datetime
 
 #from AUC-Thesis-DT-Physical/RemoteDrivingDashboard-master/apps/home/views.py import sio
 
@@ -24,7 +26,7 @@ LIN_VEL_STEP_SIZE = 0.01
 ANG_VEL_STEP_SIZE = 0.1
 
 ####
-interrupted = None
+interrupted = False
 
 def makeSimpleProfile(output, input, slop):
     if input > output:
@@ -92,7 +94,7 @@ def c_move(key):
 
 def move(key):  
     #timestamp here ----------------------------
-
+    #global target_linear_vel , target_angular_vel
     global pub
     try:
         # print(msg)
@@ -136,7 +138,7 @@ def move(key):
         control_angular_vel = makeSimpleProfile(control_angular_vel, target_angular_vel, (ANG_VEL_STEP_SIZE/2.0))
         twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = control_angular_vel
         #sio.emit('odom_data', odom_dict)
-        
+       # print(twist)
         pub.publish(twist)
 
     except:
@@ -174,12 +176,29 @@ def key_callback(msg):
 #     # Publish the Twist message
 #     pub.publish(twist)
 
+####### socket io to receive interrupt state 
+@sio.on('interrupt_callback',namespace='/interruption_state')
+
+
+def interrupt_callback(data):
+    global interrupted
+    received_timestamp = datetime.now().timestamp()
+    sent_timestamp = data['timestamp']
+    data = data['data']
+    print(f"Received interrupt state at timestamp {received_timestamp}: {data}")
+    interrupted = data
+    print('getting data from socket io')
+    print(data)
+    delay = received_timestamp - sent_timestamp
+    print(f"Delay since last data sent: {delay} seconds")
+   
+   
 
 def odom_callback(odom_data):
 
     ###
     global interrupted
-    
+    global target_linear_vel , target_angular_vel
     # Extract linear and angular velocities from the odom topic
     linear_velocity = odom_data.twist.twist.linear
     angular_velocity = odom_data.twist.twist.angular
@@ -209,24 +228,27 @@ def odom_callback(odom_data):
         }
     }
     # Send the odometry data to the Socket.io server
-    sio.emit('gazebo_event', odom_dict, namespace='/gazebo')
-    print("sent to digital")
+    # sio.emit('gazebo_event', odom_dict, namespace='/gazebo')
+    #print("sent to digital")
     twist = Twist()
-    twist.linear.x = checkLinearLimitVelocity(linear_velocity.x)
-    twist.linear.y = checkLinearLimitVelocity(linear_velocity.y)
-    twist.linear.z = checkLinearLimitVelocity(linear_velocity.z)
-    twist.angular.x = checkAngularLimitVelocity(angular_velocity.x)
-    twist.angular.y = checkAngularLimitVelocity(angular_velocity.y)
-    twist.angular.z = checkAngularLimitVelocity(angular_velocity.z)
+#    twist.linear.x = checkLinearLimitVelocity(linear_velocity.x)
+#    twist.linear.y = checkLinearLimitVelocity(linear_velocity.y)
+ #   twist.linear.z = checkLinearLimitVelocity(linear_velocity.z)
+  #  twist.angular.x = checkAngularLimitVelocity(angular_velocity.x)
+   # twist.angular.y = checkAngularLimitVelocity(angular_velocity.y)
+ #   twist.angular.z = checkAngularLimitVelocity(angular_velocity.z)
+    twist.linear.x =target_linear_vel
+    twist.angular.z=target_angular_vel
+
     if interrupted == False:
         pub.publish(twist)
-    else: 
+        # print("Alo 2")
+       # print(twist)
+        #print(interrupted)
+    else:
         set_velocities(0, 0)
 ####
 
-def interrupt_callback(data): 
-    global interrupted
-    interrupted = data.data
 
 def set_velocities(linear, angular):
         twist = Twist()
@@ -235,18 +257,24 @@ def set_velocities(linear, angular):
         pub.publish(twist)
 
 ####
-turtlebot3_model = rospy.get_param("model", "waffle_pi")
 
 
-rospy.init_node('aa')
-#sio.connect('http://localhost:8000')
-sio.connect('http://localhost:8000', namespaces=['/gazebo'])
-pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
-print("before odom")
-odom_sub = rospy.Subscriber('/odom', Odometry, odom_callback) # we are uncommenting this so that it mirrors the physical 
-print("before control")
-sub = rospy.Subscriber('/control',String,key_callback)
-#itr = rospy.Subscriber('/metric',String, c_move)
-####
-subscriber = rospy.Subscriber("/interrupt_state", Bool, interrupt_callback)
-rospy.spin()
+if __name__ == '__main__':
+    turtlebot3_model = rospy.get_param("model", "waffle_pi")
+    rospy.init_node('aa')
+    #sio.connect('http://localhost:8000')
+    #subscriber = rospy.Subscriber("/interrupt_state", Bool, interrupt_callback)
+    pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+    print("before odom")
+    odom_sub = rospy.Subscriber('/odom', Odometry, odom_callback) # we are uncommenting this so that it mirrors the physical 
+    print("before control")
+    sub = rospy.Subscriber('/control',String,key_callback)
+    try:
+        sio.connect('http://192.168.105.194:8000', namespaces=[ '/interruption_state'])  # added namespace here
+        print("connected!!!!!!!!!!!")
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
+    
+    
+    
