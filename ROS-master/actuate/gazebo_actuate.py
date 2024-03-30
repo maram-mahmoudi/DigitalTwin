@@ -12,6 +12,7 @@ import socketio
 
 
 sio = socketio.Client()
+global desired_position, desired_orientation, model_name
 
 
 # @sio.event(namespace='/movement')
@@ -26,10 +27,11 @@ GAZEBO_API_URL= "http://$HOST_IP:11346"
 
 def set_model_state(msg):
     rospy.wait_for_service('/gazebo/set_model_state')
+    
     try:
         set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
 
-        state_msg = SetJointProperties()
+        state_msg = ModelState()
         state_msg.model_name = 'turtlebot3'
         print('X: ')
         print(msg['position']['x'])
@@ -69,16 +71,13 @@ def set_model_state(msg):
         
 @sio.on('gazeboData',namespace='/manga')
 def gazeboData(data):
+    global desired_orientation, desired_position, model_name
     print("HI!!")
     #print(odom_dict)
     # Assuming the data received from socket.io contains the desired position and orientation.
-    desired_position = [data['position']['x'], data['position']['y'], data['position']['z']]
-    desired_orientation = [data['orientation']['x'], data['orientation']['y'], data['orientation']['z'], data['orientation']['w']]
-    
-    
-    
-    
-    model_name = 'turtlebot3'
+    # desired_position = [data['position']['x'], data['position']['y'], data['position']['z']]
+    # desired_orientation = [data['orientation']['x'], data['orientation']['y'], data['orientation']['z'], data['orientation']['w']]
+    # model_name = 'turtlebot3'
     set_model_state(data)
 
 
@@ -86,8 +85,8 @@ def gazeboData(data):
 
 if __name__ == '__main__':
     rospy.init_node('gazebo_asset_control')
-   
-    sio.connect('http://0.0.0.0:8000')
+
+    sio.connect('http://0.0.0.0:8000',namespaces=[ '/manga'])
 
     # Specify the model name and desired pose
     
@@ -95,7 +94,7 @@ if __name__ == '__main__':
     # Set the model state
 
     # sub = rospy.Subscriber('/odom',Odometry,set_model_state)
-    #set_model_state(model_name, desired_position, desired_orientation)
+    # set_model_state(model_name, desired_position, desired_orientation)
 
     # Spin to keep the script alive
     # sio.connect(GAZEBO_API_URL)

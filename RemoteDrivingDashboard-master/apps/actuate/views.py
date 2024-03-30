@@ -115,6 +115,25 @@ def connect_QT(sid,data):
     print('[INFO] Create_DynamicDB connected: {}'.format(sid))
 
 
+####### socket io for the ultrasonic 
+@sio.on('ultrasonic_event',namespace='/ultrasonic_namespace')
+def handle_sensed_data(sid,message):
+    sio.emit('ultrasonicData', message, namespace='/ultrasonic')
+
+
+####### socket io for the ultrasonic states 
+@sio.on('ultrasonic_state_event',namespace='/ultrasonic_state_namespace')
+def handle_sensed_data(sid,message):
+    sio.emit('interrupt_callback', message, namespace='/interruption_state')
+
+####### socket io for sending unity cmd-vel data to  physical 
+@sio.on('unity_cmdvel_event',namespace='/unity_cmdvel_namespace')
+def handle_sensed_data(sid,message):
+    sio.emit('unity_cmdvel_callback', message, namespace='/unity_cmdvel')
+
+
+
+
 
 
 def main(request):
@@ -143,6 +162,5 @@ def direction(request):
         print("_____________________",direction)
         # actuate_DB(direction, 'direction')
     return render(request, "actuate/actuate_data.html")
-
 
 
