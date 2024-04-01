@@ -88,7 +88,7 @@ def disconnect():
 	
 	
 if __name__ == '__main__':
-    sio.connect('http://172.20.10.4:8000')
+    sio.connect('http://192.168.190.77:8000')
     rospy.init_node('streaming', anonymous=True)
     sub = rospy.Subscriber('/images', Image,image_callback)
     rospy.spin()

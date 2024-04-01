@@ -32,31 +32,31 @@ def set_model_state(msg):
         set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
 
         state_msg = ModelState()
-        state_msg.model_name = 'turtlebot3'
-        print('X: ')
-        print(msg['position']['x'])
-        state_msg.pose.position.x = msg['position']['x']
-        state_msg.pose.position.y = msg['position']['y']
-        state_msg.pose.position.z = msg['position']['z']
-        state_msg.pose.orientation.x = msg['orientation']['x']
-        state_msg.pose.orientation.y = msg['orientation']['y']
-        state_msg.pose.orientation.z = msg['orientation']['z']
-        state_msg.pose.orientation.w = msg['orientation']['w']
+        # state_msg.model_name = 'turtlebot3'
+        # print('X: ')
+        # print(msg['position']['x'])
+        # state_msg.pose.position.x = msg['position']['x']
+        # state_msg.pose.position.y = msg['position']['y']
+        # state_msg.pose.position.z = msg['position']['z']
+        # state_msg.pose.orientation.x = msg['orientation']['x']
+        # state_msg.pose.orientation.y = msg['orientation']['y']
+        # state_msg.pose.orientation.z = msg['orientation']['z']
+        # state_msg.pose.orientation.w = msg['orientation']['w']
 
-        #state_msg.twist.linear.x = msg['linear_velocity']['x']
-        #state_msg.twist.linear.y = msg['linear_velocity']['y']
-        #state_msg.twist.linear.z = msg['linear_velocity']['z']
+        state_msg.twist.linear.x = msg['linear_velocity']['x']
+        state_msg.twist.linear.y = msg['linear_velocity']['y']
+        state_msg.twist.linear.z = msg['linear_velocity']['z']
 
-        #state_msg.twist.angular.x = msg['angular_velocity']['x']
-        #state_msg.twist.angular.y = msg['angular_velocity']['y']
-        #state_msg.twist.angular.z = msg['angular_velocity']['z']
-        # state_msg.pose.position.x = msg.pose.pose.position.x + 0.001
-        # state_msg.pose.position.y = msg.pose.pose.position.y
-        # state_msg.pose.position.z = msg.pose.pose.position.z
-        # state_msg.pose.orientation.x = msg.pose.pose.orientation.x + 0.01
-        # state_msg.pose.orientation.y = msg.pose.pose.orientation.y
-        # state_msg.pose.orientation.z = msg.pose.pose.orientation.z
-        # state_msg.pose.orientation.w = msg.pose.pose.orientation.w
+        state_msg.twist.angular.x = msg['angular_velocity']['x']
+        state_msg.twist.angular.y = msg['angular_velocity']['y']
+        state_msg.twist.angular.z = msg['angular_velocity']['z']
+        state_msg.pose.position.x = msg.pose.pose.position.x + 0.001
+        state_msg.pose.position.y = msg.pose.pose.position.y
+        state_msg.pose.position.z = msg.pose.pose.position.z
+        state_msg.pose.orientation.x = msg.pose.pose.orientation.x + 0.01
+        state_msg.pose.orientation.y = msg.pose.pose.orientation.y
+        state_msg.pose.orientation.z = msg.pose.pose.orientation.z
+        state_msg.pose.orientation.w = msg.pose.pose.orientation.w
 
         response = set_state(state_msg)
 

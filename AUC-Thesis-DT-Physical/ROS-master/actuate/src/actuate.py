@@ -11,6 +11,10 @@ import socketio
 from std_msgs.msg import Bool
 from datetime import datetime
 
+###
+from std_msgs.msg import Bool
+from datetime import datetime
+
 #from AUC-Thesis-DT-Physical/RemoteDrivingDashboard-master/apps/home/views.py import sio
 
 
@@ -25,6 +29,9 @@ WAFFLE_MAX_ANG_VEL = 1.82
 
 LIN_VEL_STEP_SIZE = 0.01
 ANG_VEL_STEP_SIZE = 0.1
+
+####
+interrupted = False
 
 ####
 interrupted = False
@@ -96,6 +103,7 @@ def c_move(key):
 def move(key):  
     #timestamp here ----------------------------
     #global target_linear_vel , target_angular_vel
+    #global target_linear_vel , target_angular_vel
     global pub
     try:
         # print(msg)
@@ -139,6 +147,7 @@ def move(key):
         control_angular_vel = makeSimpleProfile(control_angular_vel, target_angular_vel, (ANG_VEL_STEP_SIZE/2.0))
         twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = control_angular_vel
         #sio.emit('odom_data', odom_dict)
+       # print(twist)
        # print(twist)
         pub.publish(twist)
 
@@ -198,6 +207,10 @@ def odom_callback(odom_data):
     ###
     global interrupted
     global target_linear_vel , target_angular_vel
+
+    ###
+    global interrupted
+    global target_linear_vel , target_angular_vel
     # Extract linear and angular velocities from the odom topic
     #print(odom_data.twist.twist.linear)
     linear_velocity = odom_data.twist.twist.linear
@@ -228,8 +241,8 @@ def odom_callback(odom_data):
         }
     }
     # Send the odometry data to the Socket.io server
-    sio.emit('gazebo_event', odom_dict, namespace='/gazebo')
-    print("sent to digital")
+    # sio.emit('gazebo_event', odom_dict, namespace='/gazebo')
+    #print("sent to digital")
     twist = Twist()
 #    twist.linear.x = checkLinearLimitVelocity(linear_velocity.x)
 #    twist.linear.y = checkLinearLimitVelocity(linear_velocity.y)

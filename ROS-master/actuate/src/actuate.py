@@ -4,6 +4,8 @@ import sys, select, os
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import BatteryState
+###
+from std_msgs.msg import Bool
 
 
 
@@ -17,6 +19,13 @@ WAFFLE_MAX_ANG_VEL = 1.82
 
 LIN_VEL_STEP_SIZE = 0.01
 ANG_VEL_STEP_SIZE = 0.1
+
+####
+interrupted = False
+prev_linear_velocity = 0.0
+prev_angular_velocity = 0.0
+
+
 
 def makeSimpleProfile(output, input, slop):
     if input > output:
@@ -86,6 +95,7 @@ def move(key):
     #timestamp here ----------------------------
 
     global pub
+    global target_linear_vel , target_angular_vel
     try:
         # print(msg)
         # while not rospy.is_shutdown():
@@ -168,6 +178,11 @@ def key_callback(msg):
 
 
 def odom_callback(odom_data):
+    ###
+    global interrupted
+    #global prev_linear_velocity , prev_angular_velocity 
+    global target_linear_vel , target_angular_vel
+
     # Extract linear and angular velocities from the odom topic
     linear_velocity = odom_data.twist.twist.linear
     angular_velocity = odom_data.twist.twist.angular
@@ -200,15 +215,40 @@ def odom_callback(odom_data):
     # Send the odometry data to the Socket.io server
     #sio.emit('odom_data', odom_dict)
     twist = Twist()
-    twist.linear.x = checkLinearLimitVelocity(linear_velocity.x)
+    #twist.linear.x = checkLinearLimitVelocity(linear_velocity.x)
     twist.linear.y = checkLinearLimitVelocity(linear_velocity.y)
     twist.linear.z = checkLinearLimitVelocity(linear_velocity.z)
     twist.angular.x = checkAngularLimitVelocity(angular_velocity.x)
     twist.angular.y = checkAngularLimitVelocity(angular_velocity.y)
-    twist.angular.z = checkAngularLimitVelocity(angular_velocity.z)
+    #twist.angular.z = checkAngularLimitVelocity(angular_velocity.z)
 
+    twist.linear.x =  target_linear_vel
+    twist.angular.z =  target_angular_vel
+
+    if interrupted == False:
+        
+        pub.publish(twist)
+        print("Alo 1")
+        print(twist.linear.x)
+        print("Alo 2")
+
+        print(twist)
+    
+    else: 
+        set_velocities(0, 0)
+    ####
+
+def interrupt_callback(data): 
+    global interrupted
+    interrupted = data.data
+
+def set_velocities(linear, angular):
+    twist = Twist()
+    twist.linear.x = linear
+    twist.angular.z = angular
     pub.publish(twist)
 
+    ####
 
 
 turtlebot3_model = rospy.get_param("model", "waffle_pi")
@@ -221,6 +261,7 @@ sub = rospy.Subscriber('/control',String,key_callback)
 odom_sub = rospy.Subscriber('/odom', Odometry, odom_callback) # we are uncommenting this so that it mirrors the physical 
 #itr = rospy.Subscriber('/metric',String, c_move)
 
-
+####
+subscriber = rospy.Subscriber("/interrupt_state", Bool, interrupt_callback)
 
 rospy.spin()
