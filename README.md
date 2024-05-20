@@ -26,79 +26,71 @@ Before you begin, ensure you have the following installed:
 
 ### Step 3: Set Up ROS-Unity Connector
 
-1. **Download the ROS-Unity Connector**:
-   - You can download it from the [Unity Asset Store](https://assetstore.unity.com/) or from the [official GitHub repository](https://github.com/Unity-Technologies/ROS-TCP-Connector).
+1. **Use the [official Unity Robotics Hub guide](https://github.com/Unity-Technologies/ROS-TCP-Connector)
 
-2. **Import the Connector Package into Unity**:
-   - Open Unity and create a new project.
-   - Go to `Assets > Import Package > Custom Package` and import the ROS-Unity connector package you downloaded.
 
-### Step 4: Configure ROS
+### Step 4: Use the SDK to generate the 
 
-1. **Install ROS Bridge**:
-   - Install `rosbridge_suite` to facilitate communication between ROS and Unity. Use the following command:
-     ```sh
-     sudo apt-get install ros-noetic-rosbridge-server
-     ```
-   - Start `rosbridge` by running:
-     ```sh
-     roslaunch rosbridge_server rosbridge_websocket.launch
-     ```
 
-2. **Install ROS Unity Message Definitions**:
-   - Clone the `ros_unity_msgs` repository and build the workspace:
-     ```sh
-     cd ~/catkin_ws/src
-     git clone https://github.com/Unity-Technologies/ROS-TCP-Endpoint.git
-     cd ~/catkin_ws
-     catkin_make
-     source devel/setup.bash
-     ```
+1. Clone this repository to your local machine:
 
-### Step 5: Configure Unity
+    ```bash
+    git clone https://github.com/MokhtarBaWahal/DockerizedPrivateCloud_SDK.git
+    ```
 
-1. **Set Up ROS Settings in Unity**:
-   - In Unity, go to `Window > ROS Settings`.
-   - Set the ROS IP Address to the IP of your ROS machine (or `localhost` if running on the same machine).
-   - Set the ROS Port to `9090` (default for rosbridge).
+2. Install dependencies using `pip`:
 
-2. **Add ROS Connection Script**:
-   - Create an empty GameObject in your Unity scene.
-   - Attach the `ROSConnection` script to the GameObject.
-   - Configure the ROS settings in the `ROSConnection` script (e.g., IP Address, Port).
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-### Step 6: Send and Receive Messages
 
-1. **Create ROS Publishers and Subscribers in Unity**:
-   - Create scripts for ROS Publishers and Subscribers. Example for a Publisher:
-     ```csharp
-     using UnityEngine;
-     using RosMessageTypes.Std;
-     using Unity.Robotics.ROSTCPConnector;
+3. Modify the `config.yaml` file to specify the ROS node configuration, including topics to publish and subscribe, middleware flags, and Unity integration flags.
 
-     public class ROSPublisherExample : MonoBehaviour
-     {
-         ROSConnection ros;
-         public string topicName = "unity_pub";
+    ```yaml
+    ros_node:
+      name: test
+      topics:
+        publish:
+          topic_1:
+            name: "cmd_vel"
+            type:  "geometry_msgs/Twist"
+            middleware_flag: 1
+            unity_sub_flag: 1
+            unity_pub_flag: 1
+        subscribe:
+          topic_1:
+            name: "control"
+            type:  "std_msgs/String"
+            middleware_flag: 1
+            unity_sub_flag: 0
+            unity_pub_flag: 0
+          topic_2:
+            name: "metric"
+            type:  "std_msgs/String"
+            middleware_flag: 1
+            unity_sub_flag: 0
+            unity_pub_flag: 0
+          topic_3: 
+            name: "cam"
+            type:  "sensor_msgs/CompressedImage"
+            middleware_flag: 1
+            unity_sub_flag: 1
+            unity_pub_flag: 0
+          topic_4: 
+            name: "ultra_sonic_unity"
+            type:  "std_msgs/Float32"
+            middleware_flag: 0
+            unity_sub_flag: 1
+            unity_pub_flag: 0
+    ```
 
-         void Start()
-         {
-             ros = ROSConnection.GetOrCreateInstance();
-             ros.RegisterPublisher<StringMsg>(topicName);
-         }
+2. Run the SDK with the configured settings:
 
-         void Update()
-         {
-             StringMsg msg = new StringMsg("Hello from Unity!");
-             ros.Publish(topicName, msg);
-         }
-     }
-     ```
+    ```bash
+    python setup.py
+    ```
 
-2. **Running and Testing**:
-   - Start `roscore` and `rosbridge_server` on your ROS machine.
-   - Play the Unity scene to start sending/receiving ROS messages.
-   - Monitor the communication in ROS using `rostopic echo /unity_pub`.
 
 ### Troubleshooting
 
