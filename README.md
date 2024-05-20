@@ -1,8 +1,8 @@
-# Unity ROS Connector Readme
+# Immersive Digital Twins for AGV Readme
 
 ## Overview
 
-This readme provides instructions on how to connect Unity with ROS (Robot Operating System) using the ROS-Unity connector. This allows you to leverage ROS capabilities within a Unity project, enabling the simulation and control of robotics applications.
+This readme provides instructions on how to connect Unity with ROS (Robot Operating System) using the DockerizedPrivateCloud_SDK and ROS-Unity connector. This allows you to leverage ROS capabilities within a Unity project, achieving Immersive experience and enhancing Human-Computer Interaction.
 
 ## Prerequisites
 
@@ -16,13 +16,13 @@ Before you begin, ensure you have the following installed:
 
 ### Step 1: Install ROS
 
-1. Follow the official ROS installation guide for your operating system.
+1. Follow the [official ROS installation guide](http://wiki.ros.org/ROS/Installation) for your operating system. guide for your operating system.
 2. Ensure that you can run `roscore` and other ROS nodes from your terminal.
 
 ### Step 2: Install Unity
 
 1. Download and install Unity Hub from [Unity's official website](https://unity.com/).
-2. Use Unity Hub to install the latest version of Unity Editor.
+2. Use Unity Hub to install the 2022 version of Unity Editor.
 
 ### Step 3: Set Up ROS-Unity Connector
 
