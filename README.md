@@ -17,7 +17,7 @@ Before you begin, ensure you have the following installed:
 ### Step 1: Install ROS
 
 1. Follow the [official ROS installation guide](http://wiki.ros.org/ROS/Installation) for your operating system. guide for your operating system.
-2. Ensure that you can run `roscore` and other ROS nodes from your terminal.
+2. Ensure you can run `roscore` and other ROS nodes from your terminal.
 
 ### Step 2: Install Unity
 
@@ -90,6 +90,9 @@ Before you begin, ensure you have the following installed:
     ```bash
     python setup.py
     ```
+5. Files will be generated, copy the scripts file in unity level to your project in unity under the Assets file.
+6. Implement the callbacks.
+7. Attach the ready scripts to game objects and have fun.
 
 
 ### Troubleshooting
@@ -105,4 +108,4 @@ Before you begin, ensure you have the following installed:
 
 By following this guide, you should be able to establish a connection between Unity and ROS using the ROS-Unity connector. This setup allows for the simulation and control of robotic applications within Unity, leveraging ROS's powerful middleware.
 
-For more detailed information, refer to the official documentation of the ROS-Unity connector and ROS.
+For more detailed information, refer to the official ROS-Unity connector and ROS documentation.
