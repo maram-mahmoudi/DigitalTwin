@@ -10,6 +10,7 @@ Before you begin, ensure you have the following installed:
 
 - **Unity**: Latest version of Unity 3D.
 - **ROS**: Latest version of ROS (preferably ROS Noetic for Ubuntu or ROS Melodic for older Ubuntu distributions).
+- **Dockerized Private Cloud**: 
 - **ROS-Unity Connector**: Unity ROS package from the Unity Asset Store or GitHub.
 
 ## Step-by-Step Guide
