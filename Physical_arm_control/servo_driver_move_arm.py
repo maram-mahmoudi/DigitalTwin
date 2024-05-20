@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from __future__ import division
-import time
 import Adafruit_PCA9685
 import rospy
 from gazebo_msgs.srv import SetJointProperties
@@ -12,10 +11,16 @@ import socketio
 import time
 import math
 from adafruit_servokit import ServoKit
+import board 
+import datetime
+##
+i2c_bus = board.I2C()
 
 
 
-kit = ServoKit(channels=16)
+#kit = ServoKit(channels=16)
+kit = ServoKit(channels=16, i2c=i2c_bus)
+
 
 sio = socketio.Client() 
 
@@ -48,7 +53,7 @@ def set_servo_angle(angle, channel):
 
 def initialize():
     # Set the servos to their initial positions
-    set_servo_angle(0, BOTTOM_DECK_SERVO_CHANNEL)
+    #set_servo_angle(0, BOTTOM_DECK_SERVO_CHANNEL)
     set_servo_angle(0, BOTTOM_PIVOT_SERVO_CHANNEL)
     set_servo_angle(0, MIDDLE_PIVOT_SERVO_CHANNEL)
     set_servo_angle(0, UPPER_PIVOT_SERVO_CHANNEL)
@@ -63,9 +68,12 @@ def set_joint_state(msg):
         'joint2': msg['position_joint2'],
         'joint3': (3.14 - (float(msg['position_joint3']) + 1.57)) - 1.57,
         'joint4': msg['position_joint4'],
-
+        'time' : msg['time'],
         'gripper': msg['position_gripper'],
     }
+    current_datetime = datetime.datetime.now()
+    mills =  current_datetime.minute*60*1000 + current_datetime.second*1000+ current_datetime.microsecond//1000
+    print(f"msgax {mills-joint_positions['time']}")
     set_servo_angle(joint_positions['joint1'], BOTTOM_DECK_SERVO_CHANNEL)
     set_servo_angle(joint_positions['joint2'], BOTTOM_PIVOT_SERVO_CHANNEL)
     set_servo_angle(joint_positions['joint3'], MIDDLE_PIVOT_SERVO_CHANNEL)

@@ -57,7 +57,7 @@ class CVClient(object):
                         'image': self._convert_image_to_jpeg(frame),
                     },namespace='/cv')
 
-    def close(self):
+    def close(self)
         sio.disconnect()
 
 

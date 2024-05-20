@@ -68,7 +68,7 @@ if __name__ == '__main__':
     interrupt_pub = rospy.Publisher("/interrupt_state", Bool, queue_size=10)
 
     try:
-        sio.connect('http://192.168.105.194:8000', namespaces=['/ultrasonic_state_namespace', '/ultrasonic'  ])
+        sio.connect('http://192.168.4.194:8000', namespaces=['/ultrasonic_state_namespace', '/ultrasonic'  ])
         while not rospy.is_shutdown():
             # print(interrupted)
             ## send state throught socket io to physical

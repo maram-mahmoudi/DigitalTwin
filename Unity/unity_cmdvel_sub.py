@@ -35,7 +35,7 @@ if __name__ == '__main__':
     rospy.init_node('Unity_cmd_vel_subscriber', anonymous=True)
     subscriber = rospy.Subscriber("/cmd_vel", Twist, cmd_vel_callback)
     try:
-        sio.connect('http://192.168.23.77:8000', namespaces=['/unity_cmdvel_namespace'])
+        sio.connect('http://192.168.81.51:8000', namespaces=['/unity_cmdvel_namespace'])
         while not rospy.is_shutdown():
             rospy.sleep(1)
         

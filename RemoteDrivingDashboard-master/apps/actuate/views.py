@@ -131,6 +131,10 @@ def handle_sensed_data(sid,message):
 def handle_sensed_data(sid,message):
     sio.emit('unity_cmdvel_callback', message, namespace='/unity_cmdvel')
 
+####### socket io for getting camera feed from physical to unity  
+@sio.on('cam_event',namespace='/cam_namespace')
+def handle_sensed_data(sid,message):
+    sio.emit('cam_callback', message, namespace='/camera_feed')
 
 
 

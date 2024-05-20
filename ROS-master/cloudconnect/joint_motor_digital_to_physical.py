@@ -1,10 +1,11 @@
 import rospy
-import sys
 import sys, select, os
 from std_msgs.msg import String
 from gazebo_msgs.srv import SetJointProperties
 from sensor_msgs.msg import JointState
 import socketio
+import time
+import datetime
 
 
 sio = socketio.Client()
@@ -14,6 +15,13 @@ def joint_callback(data):
 
     global counter
     try:
+        current_datetime = datetime.datetime.now()
+        mills =  current_datetime.minute*60*1000 + current_datetime.second*1000+ current_datetime.microsecond//1000
+        print(f"{data.header.stamp.nsecs} --- {mills}")
+
+        # Calculate delay
+       
+
         joint_state_positions= {
             'name' : data.name,
             'position_joint1' : data.position[2],
@@ -21,7 +29,7 @@ def joint_callback(data):
             'position_joint3' : data.position[4],
             'position_joint4' : data.position[5],
             'position_gripper': data.position[0],
-
+            'time' : data.header.stamp.nsecs,
         }
         # Avoiding high throughput
         counter += 1
