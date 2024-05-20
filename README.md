@@ -90,16 +90,22 @@ Before you begin, ensure you have the following installed:
     ```bash
     python setup.py
     ```
-5. Files will be generated, copy the scripts file in unity level to your project in unity under the Assets file.
+5. Files will be generated, copy the scripts folder located in the unity level folder to your project in unity under the Assets folder.
 6. Implement the callbacks.
-7. Attach the ready scripts to game objects and have fun.
-
+8. Attach the ready scripts to game objects,  for Example: the AGV controller script assign it to the AGV Gameobject.
+9. Launch the endpoint in ROS
+     ```bash
+   source devel/setup.bash
+     roslaunch ros_tcp_endpoint endpoint.launch
+    ```
+10. Connect Unity to ros through the ROS Settings in Unity
+11. Run and have fun.
 
 ### Troubleshooting
 
 - **Connection Issues**:
   - Verify the IP address and port settings in Unity match those of your ROS setup.
-  - Ensure `rosbridge_server` is running without errors.
+  - Ensure `ros_tcp endpoint` is running without errors.
 
 - **Message Errors**:
   - Ensure the message types used in Unity scripts match the ROS message definitions.
