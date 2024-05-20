@@ -111,8 +111,4 @@ Before you begin, ensure you have the following installed:
 - **Message Errors**:
   - Ensure the message types used in Unity scripts match the ROS message definitions.
 
-## Conclusion
 
-By following this guide, you should be able to establish a connection between Unity and ROS using the ROS-Unity connector. This setup allows for the simulation and control of robotic applications within Unity, leveraging ROS's powerful middleware.
-
-For more detailed information, refer to the official ROS-Unity connector and ROS documentation.
