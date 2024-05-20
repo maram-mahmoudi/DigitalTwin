@@ -26,10 +26,10 @@ Before you begin, ensure you have the following installed:
 
 ### Step 3: Set Up ROS-Unity Connector
 
-1. **Use the [official Unity Robotics Hub guide](https://github.com/Unity-Technologies/ROS-TCP-Connector)
+1. Use the [official Unity Robotics Hub guide](https://github.com/Unity-Technologies/ROS-TCP-Connector)
 
 
-### Step 4: Use the SDK to generate the 
+### Step 4: Use the SDK to generate the files that you want to subscribe/ publish data from/ to Unity 
 
 
 1. Clone this repository to your local machine:
@@ -85,7 +85,7 @@ Before you begin, ensure you have the following installed:
             unity_pub_flag: 0
     ```
 
-2. Run the SDK with the configured settings:
+4. Run the SDK with the configured settings:
 
     ```bash
     python setup.py
